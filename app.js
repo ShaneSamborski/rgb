@@ -15,20 +15,22 @@ var resetPressed = true;
 init();
 
 function init(){
+	///sets the score to 0 or whatever has been stored previously
 	setupModeButtons();
 	setupSquares();
-	var lsScore = localStorage.getItem('score');
+	var lsScore = sessionStorage.getItem('score');
 	if( lsScore !== null ){
 		score = lsScore; 
 		scoreDisplay.textContent = score;
 	}
 	else {
-		localStorage.setItem('score', score); 
+		sessionStorage.setItem('score', score); 
 	}
 	reset();
 }
 
 function setupModeButtons(){
+	///the difficulty option. changes the amount of buttons from 6 to 3
 	for(var i = 0; i < modeButtons.length; i++){
 		modeButtons[i].addEventListener("click", function(){
 			modeButtons[0].classList.remove("selected");
@@ -41,6 +43,7 @@ function setupModeButtons(){
 }
 
 function setupSquares(){
+	///this is the most of the meat of the game? this is where it compares the color picked to the correct answer and where it tells you if you were right or wrong.
 	for(var i = 0; i < squares.length; i++){
 	//add click listeners to squares
 		squares[i].addEventListener("click", function(){
@@ -59,13 +62,13 @@ function setupSquares(){
 					resetPressed = false;
 				}
 				scoreDisplay.textContent = score;
-				localStorage.setItem('score', score);
+				sessionStorage.setItem('score', score);
 			} else {
 				this.style.background = "#232323";
 				messageDisplay.textContent = "Try Again"
 				score--;
 				scoreDisplay.textContent = score; 
-				localStorage.setItem('score', score);
+				sessionStorage.setItem('score', score);
 			}
 		});
 	}
@@ -73,6 +76,7 @@ function setupSquares(){
 
 
 async function updateColorName(){
+	///this is what displays the color name when you win.
 	const regex = /\([^\)]+\)/g; 
 	var rgbColors = pickedColor.match(regex); 
 	const url = "https://www.thecolorapi.com/id?rgb="+rgbColors[0];
@@ -93,6 +97,7 @@ async function updateColorName(){
 }
 
 function reset(){
+	///this restarts the game without having to refresh the page.
 	resetPressed = true;
 	colors = generateRandomColors(numSquares);
 	//pick a new random color from array
@@ -118,6 +123,7 @@ resetButton.addEventListener("click", function(){
 })
 
 function changeColors(color){
+	///this changes all square colors to be the same as the correct choice.
 	//loop through all squares
 	for(var i = 0; i < squares.length; i++){
 		//change each color to match given color
@@ -126,6 +132,7 @@ function changeColors(color){
 }
 
 function pickColor(){
+	///this one and the following function work together to create a random color generator for the squares????
 	var random = Math.floor(Math.random() * colors.length);
 	return colors[random];
 }
@@ -143,6 +150,7 @@ function generateRandomColors(num){
 }
 
 function randomColor(){
+	///this is what makes the RGB color in the header that you're trying to match to
 	//pick a "red" from 0 - 255
 	var r = Math.floor(Math.random() * 256);
 	//pick a "green" from  0 -255
